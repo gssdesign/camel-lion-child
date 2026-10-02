@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Camel, Lion or Child? A Nietzsche self-check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --card:#FFFDF8; --ink:#1C1A24; --muted:#6A6474; --line:#E7E1D6; --chip:#F4EEE3;
+  --camel:#D08A2E; --lion:#D2452B; --child:#2A9D8F; --focus:#3B5BDB;
+  --sans:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --card:#1E1B26; --ink:#F3EFE8; --muted:#ABA4B6; --line:#36303F; --chip:#2A2533;
+    --camel:#F0AE52; --lion:#F2785C; --child:#5CCABB; --focus:#94A9FF;
+  }
+}
+:root[data-theme="dark"]{
+  --card:#1E1B26; --ink:#F3EFE8; --muted:#ABA4B6; --line:#36303F; --chip:#2A2533;
+  --camel:#F0AE52; --lion:#F2785C; --child:#5CCABB; --focus:#94A9FF;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:#2B1E3F;color:var(--ink);font-family:var(--sans);
+  font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,a{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:10px}
+
+/* ---------- desert sky that changes with the journey ---------- */
+.sky{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.sky div{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.sky .s-c{background:linear-gradient(180deg,#2B1E3F 0%,#7A3E4E 42%,#D88A45 75%,#F3C47E 100%)}
+.sky .s-l{background:linear-gradient(180deg,#2A0F1E 0%,#7E1F2A 40%,#D2452B 72%,#F59A4E 100%)}
+.sky .s-k{background:linear-gradient(180deg,#123848 0%,#2C7F80 45%,#8FD0B9 75%,#FBEFC6 100%)}
+.sky .on{opacity:1}
+.sun{position:fixed;z-index:-1;width:42vmin;height:42vmin;border-radius:50%;right:-8vmin;bottom:18vh;
+  background:radial-gradient(circle,rgba(255,236,190,.95) 0%,rgba(255,214,150,.55) 45%,rgba(255,200,140,0) 70%);
+  pointer-events:none;transition:transform 1.1s ease}
+.dunes{position:fixed;left:0;right:0;bottom:0;z-index:-1;width:100%;height:30vh;pointer-events:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sky::after{content:"";position:absolute;inset:0;background:rgba(10,8,16,.35)}}
+:root[data-theme="dark"] .sky::after{content:"";position:absolute;inset:0;background:rgba(10,8,16,.35)}
+
+.wrap{max-width:38rem;margin:0 auto;padding:2.25rem 1.1rem 4rem;min-height:100%}
+.screen[hidden]{display:none}
+
+/* ---------- intro ---------- */
+.hero{color:#FFF8EC;padding-top:1.5rem}
+.kicker{font-weight:600;font-size:.95rem;opacity:.85;margin:0 0 1rem}
+.trio{margin:0 0 1.5rem;font-family:var(--serif);font-weight:400;font-size:clamp(3.4rem,16vw,6rem);line-height:.92;letter-spacing:-.01em}
+.trio span{display:block;opacity:0;transform:translateY(18px);animation:rise .7s ease forwards}
+.trio span:nth-child(2){animation-delay:.18s;padding-left:10%}
+.trio span:nth-child(3){animation-delay:.36s;padding-left:20%}
+.trio em{font-style:italic}
+.trio small{font-size:.5em;vertical-align:.35em;margin-left:.15em}
+@keyframes rise{to{opacity:1;transform:none}}
+.lede{font-size:1.15rem;max-width:32rem;margin:0 0 .75rem;text-shadow:0 1px 12px rgba(30,10,30,.35)}
+.meta{opacity:.85;margin:0 0 1.75rem;font-size:.98rem}
+.cta{display:inline-flex;align-items:center;gap:.6rem;border:0;border-radius:999px;padding:1rem 1.6rem;
+  background:#FFF8EC;color:#2B1E3F;font-weight:700;font-size:1.05rem;box-shadow:0 10px 30px rgba(40,10,30,.35);
+  transition:transform .15s ease}
+.cta:active{transform:scale(.97)}
+
+/* ---------- quiz ---------- */
+.card{background:var(--card);border-radius:28px;padding:1.5rem 1.25rem 1.25rem;
+  box-shadow:0 24px 60px rgba(30,10,30,.35)}
+.walk{position:relative;height:2.6rem;margin:0 .25rem 1rem}
+.walk .track{position:absolute;left:0;right:0;bottom:.55rem;height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.walk .fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--camel),var(--lion),var(--child));transition:width .45s ease}
+.walk .who{position:absolute;bottom:.75rem;left:0;font-size:1.65rem;line-height:1;transform:translateX(-50%);transition:left .45s ease}
+.walk .who.flip{transform:translateX(-50%) scaleX(-1)}
+.flip{display:inline-block;transform:scaleX(-1)}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem}
+.qnum{font-weight:700;color:var(--muted);font-size:.92rem;font-variant-numeric:tabular-nums}
+.qstage{font-weight:600;font-size:.85rem;padding:.2rem .65rem;border-radius:999px;background:var(--chip);color:var(--muted)}
+.q{font-family:var(--sans);font-weight:700;font-size:clamp(1.45rem,5.6vw,1.9rem);line-height:1.18;letter-spacing:-.015em;margin:0 0 1.35rem}
+.opts{display:flex;flex-direction:column;gap:.7rem}
+.opt{display:flex;align-items:center;gap:.9rem;text-align:left;width:100%;background:var(--chip);border:2px solid transparent;
+  border-radius:18px;padding:.95rem 1rem;font-weight:500;line-height:1.4;transition:background .15s,border-color .15s,transform .12s}
+.opt .key{flex:none;width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;
+  background:var(--card);color:var(--muted);transition:background .15s,color .15s}
+@media (hover:hover){.opt:hover{border-color:var(--line);background:var(--card)}}
+.opt:active{transform:scale(.985)}
+.opt.picked{border-color:var(--ink);background:var(--card)}
+.opt.picked .key{background:var(--ink);color:var(--card)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem;min-height:2.5rem}
+.back{background:none;border:0;color:var(--muted);font-weight:600;padding:.5rem .25rem}
+.back[disabled]{visibility:hidden}
+.hint{color:var(--muted);font-size:.85rem}
+@media (hover:none){.hint{display:none}}
+.fade{animation:fade .32s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- result share card ---------- */
+.share-card{position:relative;overflow:hidden;border-radius:30px;color:#FFF8EC;padding:1.75rem 1.5rem 1.4rem;
+  box-shadow:0 30px 70px rgba(20,5,20,.45);aspect-ratio:4/5;display:flex;flex-direction:column}
+.share-card.camel{background:linear-gradient(160deg,#3A2348 0%,#9A4F3C 48%,#E3A04A 100%)}
+.share-card.lion{background:linear-gradient(160deg,#2E0C1A 0%,#9B2230 50%,#EE7240 100%)}
+.share-card.child{background:linear-gradient(160deg,#103746 0%,#2A8C86 52%,#B9E3C9 100%)}
+.share-card::before{content:"";position:absolute;width:70%;aspect-ratio:1;border-radius:50%;right:-22%;top:-18%;
+  background:radial-gradient(circle,rgba(255,240,205,.55),rgba(255,240,205,0) 65%)}
+.share-card::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-38%;height:62%;border-radius:50% 50% 0 0;
+  background:rgba(255,248,236,.12)}
+.sc-top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;font-weight:600;font-size:.9rem;opacity:.9}
+.sc-emoji{position:relative;z-index:1;font-size:clamp(4.2rem,20vw,6rem);line-height:1;margin:1.1rem 0 .4rem}
+.sc-iam{position:relative;z-index:1;font-weight:600;font-size:1.05rem;opacity:.9;margin:0}
+.sc-name{position:relative;z-index:1;font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:clamp(4rem,19vw,6.2rem);line-height:.9;margin:0 0 .6rem;letter-spacing:-.01em}
+.sc-line{position:relative;z-index:1;font-size:1.05rem;line-height:1.4;max-width:24rem;margin:0}
+.sc-mix{position:relative;z-index:1;margin-top:auto;display:grid;gap:.45rem;padding-top:1rem}
+.sc-bar{display:grid;grid-template-columns:3.6rem 1fr 2.6rem;gap:.6rem;align-items:center;font-size:.88rem;font-weight:600}
+.sc-bar .t{height:9px;border-radius:9px;background:rgba(255,248,236,.25);overflow:hidden}
+.sc-bar .t i{display:block;height:100%;width:0;border-radius:9px;background:#FFF8EC;transition:width .9s ease}
+.sc-bar .p{text-align:right;font-variant-numeric:tabular-nums}
+.sc-brand{position:relative;z-index:1;margin-top:.9rem;font-size:.8rem;opacity:.8;display:flex;justify-content:space-between;gap:1rem}
+
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0 .4rem}
+.btn{display:flex;align-items:center;justify-content:center;gap:.45rem;border-radius:999px;padding:.9rem 1rem;font-weight:700;border:0;text-decoration:none;font-size:1rem}
+.btn.solid{background:#FFF8EC;color:#2B1E3F;grid-column:1/-1;box-shadow:0 10px 26px rgba(30,10,30,.3)}
+.btn.wa{background:#25D366;color:#073B1E}
+.btn.glass{background:rgba(255,248,236,.18);color:#FFF8EC;border:1.5px solid rgba(255,248,236,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.toast{color:#FFF8EC;text-align:center;font-weight:600;min-height:1.5rem;margin:.2rem 0 1.2rem;font-size:.95rem}
+.fallback{width:100%;border-radius:14px;border:0;padding:.8rem;font:inherit;font-size:.9rem;margin-bottom:1rem}
+.fallback[hidden]{display:none}
+
+.deep{background:var(--card);border-radius:28px;padding:1.5rem 1.25rem;box-shadow:0 24px 60px rgba(30,10,30,.3)}
+.deep h3{font-family:var(--sans);font-weight:800;font-size:1.45rem;letter-spacing:-.015em;margin:0 0 .35rem}
+.deep .sub{color:var(--muted);margin:0 0 1.25rem}
+.note{border-radius:16px;padding:.9rem 1rem;margin:0 0 1.4rem;background:var(--chip);font-size:.98rem}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 1.15rem 3rem}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-.05rem;width:2.1rem;height:2.1rem;border-radius:12px;
+  display:grid;place-items:center;font-weight:800;color:#FFF8EC;background:var(--accent)}
+.steps b{display:block;font-weight:700;margin-bottom:.1rem}
+.steps span{color:var(--muted)}
+.retake{width:100%;margin-top:.5rem;background:var(--ink);color:var(--card)}
+.foot{margin-top:1.5rem;padding-top:1.1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.foot p{margin:0 0 .6rem}
+.foot a{color:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}.trio span{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"><div class="s-c on" id="skyC"></div><div class="s-l" id="skyL"></div><div class="s-k" id="skyK"></div></div>
+<div class="sun" id="sun" aria-hidden="true"></div>
+<svg class="dunes" viewBox="0 0 1440 300" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 170 C 240 90, 420 220, 700 150 S 1150 70, 1440 160 L1440 300 L0 300Z" fill="rgba(255,240,215,.16)"/>
+  <path d="M0 230 C 300 160, 560 270, 860 210 S 1260 170, 1440 230 L1440 300 L0 300Z" fill="rgba(255,240,215,.22)"/>
+</svg>
+
+<main class="wrap">
+
+  <section class="screen hero" id="intro">
+    <p class="kicker">A Nietzsche self-check</p>
+    <h1 class="trio"><span>Camel<small class="flip">🐪</small></span><span><em>Lion</em><small>🦁</small></span><span>Child<small>🧒</small></span></h1>
+    <p class="lede">In <em>Thus Spoke Zarathustra</em>, Nietzsche says the spirit changes three times on its way to freedom. The camel carries duties. The lion fights them. The child creates new values, in play.</p>
+    <p class="meta">12 questions. About 3 minutes. Answer for how life feels right now.</p>
+    <button class="cta" id="start">Find my stage <span aria-hidden="true">🐾</span></button>
+  </section>
+
+  <section class="screen" id="quiz" hidden>
+    <div class="card">
+      <div class="walk" aria-hidden="true"><div class="track"><div class="fill" id="fill"></div></div><div class="who flip" id="who">🐪</div></div>
+      <div class="qhead"><span class="qnum" id="count">Question 1 of 12</span><span class="qstage" id="leg">Crossing the desert</span></div>
+      <div id="qbody">
+        <h2 class="q" id="qtext" tabindex="-1"></h2>
+        <div class="opts" id="opts" role="group" aria-labelledby="qtext"></div>
+      </div>
+      <div class="qfoot">
+        <button class="back" id="back">← Previous</button>
+        <span class="hint">Tip: press 1, 2 or 3</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="result" hidden>
+    <div class="share-card" id="shareCard">
+      <div class="sc-top"><span>Camel, Lion or Child?</span><span>Nietzsche</span></div>
+      <div class="sc-emoji" id="scEmoji" aria-hidden="true"></div>
+      <p class="sc-iam">My spirit right now is the</p>
+      <h2 class="sc-name" id="scName" tabindex="-1"></h2>
+      <p class="sc-line" id="scLine"></p>
+      <div class="sc-mix" id="scMix"></div>
+      <div class="sc-brand"><span>From <em>Thus Spoke Zarathustra</em></span><span>Which one are you?</span></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn solid" id="shareBtn">Share with friends <span aria-hidden="true">✨</span></button>
+      <a class="btn wa" id="waBtn" target="_blank" rel="noopener">WhatsApp</a>
+      <button class="btn glass" id="copyBtn">Copy link</button>
+    </div>
+    <p class="toast" id="toast" role="status"></p>
+    <textarea class="fallback" id="fallback" rows="3" hidden readonly></textarea>
+
+    <div class="deep">
+      <h3 id="stepsH"></h3>
+      <p class="sub" id="summary"></p>
+      <div class="note" id="between"></div>
+      <ol class="steps" id="steps"></ol>
+      <button class="btn retake" id="retake">Take it again</button>
+      <div class="foot">
+        <p>A reflection exercise based on one reading of Nietzsche, not a psychological test. Many scholars read the three stages as a cycle you pass through again and again, not a ladder you climb once.</p>
+        <p>Go deeper: <a href="https://plato.stanford.edu/entries/nietzsche/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy on Nietzsche</a>, and <em>Thus Spoke Zarathustra</em>, Part I, "On the Three Metamorphoses" (Walter Kaufmann's translation is a good one).</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// Share the address the quiz is opened from (e.g. GitHub Pages); fall back to the Claude link.
+const LINK = (/(github[.]io|netlify[.]app)$/.test(location.hostname))
+  ? location.origin + location.pathname
+  : "https://claude.ai/artifact/GdyEuhiNgaHvRvz42We8S2";
+
+const Q = [
+  {q:"When you face a big life decision, the first question in your head is…",
+   o:[["What would I love to build here?","k"],["What's expected of me?","c"],["What am I no longer willing to accept?","l"]]},
+  {q:"The rules your family and society handed you feel like…",
+   o:[["Walls I keep pushing against","l"],["Raw material: I keep what fits and reshape the rest","k"],["Things I should honour and carry well","c"]]},
+  {q:"Your usual Sunday-night feeling about the week ahead:",
+   o:[["Heavy, but I'll get through it. It's my duty.","c"],["Curious about what I'll make or try this week","k"],["Restless and fed up with how things are run","l"]]},
+  {q:"Someone criticises a choice you made. You mostly…",
+   o:[["Push back hard. It's my life.","l"],["Worry that I've let them down","c"],["Listen, then decide calmly on my own terms","k"]]},
+  {q:"At work, your relationship with rules and processes is…",
+   o:[["I design better ways and try them out","k"],["I question them and bend them when they're silly","l"],["I follow them carefully. That's how trust is earned.","c"]]},
+  {q:"When you fail at something, it mostly feels like…",
+   o:[["I let people down","c"],["Part of the game. Next attempt.","k"],["More proof that the system is stacked","l"]]},
+  {q:"Most items on your to-do list are…",
+   o:[["Experiments and projects I chose myself","k"],["Obligations I've taken on","c"],["Things I want to escape, quit or fix","l"]]},
+  {q:"Which word feels truest about your life right now?",
+   o:[["Break free","l"],["Begin","k"],["Endure","c"]]},
+  {q:"When you look back at your past, you mostly feel…",
+   o:[["Resentment toward what held me back","l"],["Light. Mostly forgiven, mostly let go.","k"],["Responsible for living up to it","c"]]},
+  {q:"Your beliefs about life, meaning or faith are…",
+   o:[["Received from tradition, and I hold them as they are","c"],["Questioned hard. I've thrown out a lot.","l"],["My own understanding, keeping old pieces I truly love","k"]]},
+  {q:"Play and fun in your life are…",
+   o:[["Mostly an escape from pressure","l"],["Woven into how I work and live","k"],["Rare. They have to be earned first.","c"]]},
+  {q:"If every outside expectation disappeared tomorrow, you'd feel…",
+   o:[["Lost. Who would I even be?","c"],["Relief. Finally!","l"],["Clear. I know what I'd create.","k"]]}
+];
+
+const STAGES = {
+  c:{name:"Camel",emoji:"🐪",cls:"camel",accent:"var(--camel)",
+     line:"I carry a lot, and I carry it well. Strength first, freedom next.",
+     summary:"Duty, tradition and other people's expectations shape most of your choices. Nietzsche didn't look down on this stage. The camel's strength and discipline make every later stage possible. The risk is that you keep loading up and never ask whose load it is.",
+     next:"Your path to the Lion 🦁",
+     steps:[
+       ["Audit your load","Write down every “I should” in your life. Mark each one: chosen by me, or inherited. You can't refuse what you haven't named."],
+       ["Name your dragon","Nietzsche's lion fights a dragon covered in “Thou shalt.” Pick the one rule that most runs your life without your agreement."],
+       ["Go into the desert","The lion appears in the loneliest desert. Spend regular time alone, away from opinions: a solo walk, a journal, a trip."],
+       ["Practise small no's","Decline one small thing a week that you'd normally accept out of habit. Notice that the world doesn't end."],
+       ["Keep the camel's gifts","Don't throw away discipline and reliability. You'll need that strength for the fight, and later for creating."]
+     ]},
+  l:{name:"Lion",emoji:"🦁",cls:"lion",accent:"var(--lion)",
+     line:"I've stopped saying “I must” and started saying “I will.”",
+     summary:"You question inherited rules and refuse what doesn't fit. That takes courage. But the lion can only win freedom from things. It can't yet create. The trap is building your whole identity around what you're against.",
+     next:"Your path to the Child 🧒",
+     steps:[
+       ["Turn every no into a for","For each thing you've rejected, write one line on what you'd build in its place. Rebellion becomes a design brief."],
+       ["Practise forgetting","Nietzsche calls the child innocence and forgetting. Let go of one old grudge on purpose. Resentment keeps you tied to what you fought."],
+       ["Start a small project with no stakes","Make something just because it's fun: a sketch, a recipe, a side project. No audience, no outcome pressure."],
+       ["Say a daily yes","Each evening, note one thing about your life you'd affirm even if it repeated forever. This is the start of amor fati, loving your fate."],
+       ["Check your motives","Before a big choice, ask: am I choosing this because I want it, or because it annoys the people I'm rebelling against?"]
+     ]},
+  k:{name:"Child",emoji:"🧒",cls:"child",accent:"var(--child)",
+     line:"I'm making my own values, and I'm having fun doing it.",
+     summary:"You're largely living by values you've made your own, with lightness and play in how you work. Nietzsche called this a new beginning and a sacred Yes. It isn't a finish line, though. Life keeps handing out new burdens and new dragons.",
+     next:"How to stay the Child 🧒",
+     steps:[
+       ["Expect the next round","New responsibilities will turn you into a camel again, and new limits will wake the lion. That's the cycle working, not you failing."],
+       ["Protect your play","Guard the time and spaces where you create freely. It's usually the first thing busyness quietly eats."],
+       ["Check it's creation, not escape","The child creates. Make sure lightness hasn't turned into avoiding hard things that still matter to you."],
+       ["Make your values visible","Put what you believe into work others can use: designs, writing, mentoring. Values grow when they're shared."],
+       ["Help a camel","Someone near you is carrying too much. Ask them the question that helped you: whose load is this?"]
+     ]}
+};
+const ORDER = ["c","l","k"];
+
+let i = 0, locked = false, lastStage = "c";
+const ans = new Array(Q.length).fill(null);
+const $ = id => document.getElementById(id);
+
+function setSky(s){
+  $("skyC").classList.toggle("on", s==="c");
+  $("skyL").classList.toggle("on", s==="l");
+  $("skyK").classList.toggle("on", s==="k");
+  $("sun").style.transform = s==="c" ? "translateY(0)" : s==="l" ? "translateY(8vh)" : "translateY(-10vh)";
+}
+function show(id){
+  ["intro","quiz","result"].forEach(s => $(s).hidden = s !== id);
+  window.scrollTo(0,0);
+}
+function legFor(n){ return n < 4 ? ["🐪","Crossing the desert","c"] : n < 8 ? ["🦁","Facing the dragon","l"] : ["🧒","A new beginning","k"]; }
+
+function render(){
+  const item = Q[i];
+  const [who, leg, sky] = legFor(i);
+  $("who").textContent = who;
+  $("who").classList.toggle("flip", who === "🐪");
+  $("leg").textContent = leg;
+  setSky(sky);
+  $("count").textContent = "Question " + (i+1) + " of " + Q.length;
+  const pct = (i / Q.length) * 100;
+  $("fill").style.width = pct + "%";
+  $("who").style.left = "max(0.9rem, min(calc(100% - 0.9rem), " + pct + "%))";
+  $("back").disabled = i === 0;
+
+  // Rebuild the question block fresh so no selection or focus carries over
+  const body = $("qbody");
+  body.classList.remove("fade"); void body.offsetWidth; body.classList.add("fade");
+  $("qtext").textContent = item.q;
+  const box = $("opts");
+  box.replaceChildren();
+  item.o.forEach(([text, stage], idx) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "opt" + (ans[i] === stage ? " picked" : "");
+    b.setAttribute("aria-pressed", ans[i] === stage ? "true" : "false");
+    b.innerHTML = '<span class="key">' + (idx+1) + '</span><span></span>';
+    b.lastChild.textContent = text;
+    b.addEventListener("click", () => choose(stage, b));
+    box.appendChild(b);
+  });
+  locked = false;
+}
+
+function choose(stage, btn){
+  if (locked) return;
+  locked = true;
+  ans[i] = stage;
+  [...$("opts").children].forEach(x => { x.classList.remove("picked"); x.setAttribute("aria-pressed","false"); });
+  btn.classList.add("picked"); btn.setAttribute("aria-pressed","true");
+  setTimeout(() => {
+    if (document.activeElement) document.activeElement.blur();
+    if (i < Q.length - 1){ i++; render(); $("qtext").focus({preventScroll:true}); }
+    else results();
+  }, 260);
+}
+
+function results(){
+  const n = {c:0,l:0,k:0};
+  ans.forEach(a => { if (a) n[a]++; });
+  const max = Math.max(n.c, n.l, n.k);
+  const tops = ORDER.filter(s => n[s] === max);
+  const main = tops[0]; // on a tie, the earlier stage still has a pull
+  lastStage = main;
+  const S = STAGES[main];
+  setSky(main);
+
+  $("shareCard").className = "share-card " + S.cls;
+  $("scEmoji").innerHTML = emo(main);
+  $("scName").textContent = S.name;
+  $("scLine").textContent = S.line;
+  const mix = $("scMix"); mix.replaceChildren();
+  ORDER.forEach(s => {
+    const pct = Math.round(n[s] / Q.length * 100);
+    const row = document.createElement("div"); row.className = "sc-bar";
+    row.innerHTML = '<span>' + emo(s) + ' ' + STAGES[s].name + '</span><span class="t"><i></i></span><span class="p">' + pct + '%</span>';
+    mix.appendChild(row);
+    requestAnimationFrame(() => requestAnimationFrame(() => row.querySelector("i").style.width = pct + "%"));
+  });
+
+  $("result").style.setProperty("--accent", S.accent);
+  $("stepsH").textContent = S.next;
+  $("summary").textContent = S.summary;
+
+  const sorted = [...ORDER].sort((a,b) => n[b] - n[a]);
+  const second = sorted[1];
+  const between = $("between");
+  if (tops.length > 1){
+    between.textContent = "You're evenly split between " + tops.map(s => STAGES[s].name).join(" and ") + ". That usually means you're mid-transformation. These steps are for the " + S.name + ", since that stage is still pulling at you.";
+    between.hidden = false;
+  } else if (n[second] >= max - 2 && n[second] > 0){
+    between.textContent = "There's a strong streak of " + STAGES[second].name + " " + STAGES[second].emoji + " in you too. Different parts of life (work, family, beliefs) often sit in different stages.";
+    between.hidden = false;
+  } else between.hidden = true;
+
+  const ol = $("steps"); ol.replaceChildren();
+  S.steps.forEach(([h, t]) => {
+    const li = document.createElement("li");
+    li.innerHTML = "<b></b><span></span>";
+    li.querySelector("b").textContent = h;
+    li.querySelector("span").textContent = t;
+    ol.appendChild(li);
+  });
+
+  const msg = shareText();
+  $("waBtn").href = "https://wa.me/?text=" + encodeURIComponent(msg + " " + LINK);
+  $("toast").textContent = ""; $("fallback").hidden = true;
+
+  show("result");
+  $("scName").focus({preventScroll:true});
+}
+
+function emo(s){ return s === "c" ? '<span class="flip">🐪</span>' : STAGES[s].emoji; }
+
+function shareText(){
+  const S = STAGES[lastStage];
+  return "I got " + S.name + " " + S.emoji + " on Nietzsche's Camel, Lion or Child test. Which one are you?";
+}
+async function copyLink(){
+  const full = shareText() + " " + LINK;
+  try{
+    await navigator.clipboard.writeText(full);
+    $("toast").textContent = "Link copied. Paste it anywhere.";
+  }catch(e){
+    const f = $("fallback"); f.value = full; f.hidden = false; f.focus(); f.select();
+    $("toast").textContent = "Copy the text below to share.";
+  }
+}
+$("shareBtn").addEventListener("click", async () => {
+  if (navigator.share){
+    try{ await navigator.share({title:"Camel, Lion or Child?", text:shareText(), url:LINK}); return; }
+    catch(e){ if (e && e.name === "AbortError") return; }
+  }
+  copyLink();
+});
+$("copyBtn").addEventListener("click", copyLink);
+
+document.addEventListener("keydown", e => {
+  if ($("quiz").hidden) return;
+  const k = parseInt(e.key, 10);
+  if (k >= 1 && k <= 3){
+    const b = $("opts").children[k-1];
+    if (b) choose(Q[i].o[k-1][1], b);
+  } else if (e.key === "Backspace" && i > 0 && !locked){ i--; render(); }
+});
+
+$("start").addEventListener("click", () => { i = 0; show("quiz"); render(); });
+$("back").addEventListener("click", () => { if (i > 0 && !locked){ i--; render(); } });
+$("retake").addEventListener("click", () => { ans.fill(null); i = 0; show("quiz"); render(); });
+</script>
+</body>
+</html>
